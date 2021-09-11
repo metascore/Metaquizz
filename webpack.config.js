@@ -4,11 +4,17 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 
+const { VueLoaderPlugin } = require("vue-loader");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 let localCanisters, prodCanisters, canisters;
 
 function initCanisterIds() {
   try {
-    localCanisters = require(path.resolve(".dfx", "local", "canister_ids.json"));
+    localCanisters = require(path.resolve(
+      ".dfx",
+      "local",
+      "canister_ids.json"
+    ));
   } catch (error) {
     console.log("No local canister_ids.json found. Continuing production");
   }
@@ -32,12 +38,7 @@ function initCanisterIds() {
 initCanisterIds();
 
 const isDevelopment = process.env.NODE_ENV !== "production";
-const asset_entry = path.join(
-  "src",
-  "metaquizz_assets",
-  "src",
-  "index.html"
-);
+const asset_entry = path.join("src", "metaquizz_assets", "src", "index.html");
 
 module.exports = {
   target: "web",
@@ -67,21 +68,24 @@ module.exports = {
     path: path.join(__dirname, "dist", "metaquizz_assets"),
   },
 
-  // Depending in the language or framework you are using for
-  // front-end development, add module loaders to the default
-  // webpack configuration. For example, if you are using React
-  // modules and CSS as described in the "Adding a stylesheet"
-  // tutorial, uncomment the following lines:
-  // module: {
-  //  rules: [
-  //    { test: /\.(ts|tsx|jsx)$/, loader: "ts-loader" },
-  //    { test: /\.css$/, use: ['style-loader','css-loader'] }
-  //  ]
-  // },
+  module: {
+    rules: [
+      { test: /\.vue$/, loader: "vue-loader" },
+      { test: /\.(ts|tsx|jsx)$/, loader: "ts-loader" },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader", "postcss-loader"],
+      },
+      {
+        test: /\.png$/,
+        use: { loader: "url-loader", options: { limite: 8192 } },
+      },
+    ],
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.join(__dirname, asset_entry),
-      cache: false
+      cache: false,
     }),
     new CopyPlugin({
       patterns: [
@@ -92,12 +96,16 @@ module.exports = {
       ],
     }),
     new webpack.EnvironmentPlugin({
-      NODE_ENV: 'development',
-      METAQUIZZ_CANISTER_ID: canisters["metaquizz"]
+      NODE_ENV: "development",
+      METAQUIZZ_CANISTER_ID: canisters["metaquizz"],
     }),
     new webpack.ProvidePlugin({
       Buffer: [require.resolve("buffer/"), "Buffer"],
       process: require.resolve("process/browser"),
+    }),
+    new VueLoaderPlugin(),
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
     }),
   ],
   // proxy /api to port 8000 during development
@@ -113,6 +121,6 @@ module.exports = {
     },
     hot: true,
     contentBase: path.resolve(__dirname, "./src/metaquizz_assets"),
-    watchContentBase: true
+    watchContentBase: true,
   },
 };

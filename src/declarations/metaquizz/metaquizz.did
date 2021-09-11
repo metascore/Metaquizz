@@ -1,0 +1,76 @@
+type quizzID = nat;
+type Score = 
+ record {
+   Player__1;
+   nat;
+ };
+type Result = 
+ variant {
+   err: text;
+   ok;
+ };
+type RegisterCallback = func (Metadata) -> ();
+type QuizzToSend = 
+ record {
+   creator: principal;
+   description: text;
+   questions: vec Question;
+   quizzID: nat;
+   title: text;
+ };
+type Question = 
+ record {
+   answers: vec Answer;
+   question: text;
+   questionID: nat;
+ };
+type Player__1 = 
+ variant {
+   plug: principal;
+   stoic: principal;
+ };
+type PlayerRegisterResponse = 
+ variant {
+   err: variant {
+          AlreadyExist;
+          Unknown;
+        };
+   ok;
+ };
+type PlayerRegister = 
+ record {
+   name: text;
+   player: Player;
+ };
+type PlayerInfosResponse = 
+ variant {
+   err: variant {
+          NotFound;
+          Unknown;
+        };
+   ok: text;
+ };
+type Player = 
+ variant {
+   plug: principal;
+   stoic: principal;
+ };
+type Metagame = 
+ service {
+   addPlayer: (PlayerRegister) -> (PlayerRegisterResponse);
+   checkResultQuizz: (Player, vec nat, quizzID) -> (opt nat);
+   getInfosOfPlayer: (Player) -> (PlayerInfosResponse);
+   metascoreRegisterSelf: (RegisterCallback) -> ();
+   metascoreScores: () -> (vec Score) query;
+   register: () -> (Result);
+   sendAQuizz: (quizzID) -> (opt QuizzToSend);
+   testBasic: () -> (bool);
+   testPlayer: (Player) -> (bool);
+ };
+type Metadata = record {name: text;};
+type Answer = 
+ record {
+   answer: bool;
+   "text": text;
+ };
+service : () -> Metagame

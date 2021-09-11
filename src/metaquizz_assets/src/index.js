@@ -1,9 +1,8 @@
-import { metaquizz } from "../../declarations/metaquizz";
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router/router";
+import "tailwindcss/tailwind.css";
 
-document.getElementById("clickMeBtn").addEventListener("click", async () => {
-  const name = document.getElementById("name").value.toString();
-  // Interact with metaquizz actor, calling the greet method
-  const greeting = await metaquizz.greet(name);
-
-  document.getElementById("greeting").innerText = greeting;
-});
+const app = createApp(App);
+app.use(router);
+app.mount("#app");

@@ -5,23 +5,17 @@
       "type": "motoko"
     },
     "metaquizz_assets": {
-      "dependencies": [
-        "metaquizz"
-      ],
+      "dependencies": ["metaquizz"],
       "frontend": {
         "entrypoint": "src/metaquizz_assets/src/index.html"
       },
-      "source": [
-        "src/metaquizz_assets/assets",
-        "dist/metaquizz_assets/"
-      ],
+      "source": ["src/metaquizz_assets/assets", "dist/metaquizz_assets/"],
       "type": "assets"
     }
   },
   "defaults": {
     "build": {
-      "args": "",
-      "packtool": ""
+      "packtool": "vessel sources"
     }
   },
   "dfx": "0.8.0",
