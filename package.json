@@ -27,18 +27,17 @@
     "copy-webpack-plugin": "^9.0.1",
     "events": "3.3.0",
     "html-webpack-plugin": "5.3.1",
-    "ic-stoic-identity": "^1.4.0",
     "mini-css-extract-plugin": "^2.2.0",
     "postcss": "^8.3.6",
     "process": "0.11.10",
     "stream-browserify": "3.0.0",
     "tailwindcss": "^2.2.14",
     "terser-webpack-plugin": "5.1.1",
-    "url-loader": "^4.1.1",
     "util": "0.12.3",
     "webpack": "5.24.4",
     "webpack-cli": "4.5.0",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-dev-server": "^3.11.2",
+    "url-loader": "^4.1.1"
   },
   "browserslist": [
     "last 2 chrome version",
