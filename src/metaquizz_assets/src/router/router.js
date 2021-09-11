@@ -8,8 +8,8 @@ import Quizz from "../Quizz.vue";
 const routes = [
   { path: "/", component: HomePage },
   { path: "/plug", component: Plug },
-  { path: "/stoic", component: Stoic },
   { path: "/quizz", component: Quizz },
+  { path: "/stoic", component: Stoic },
 ];
 
 const router = createRouter({

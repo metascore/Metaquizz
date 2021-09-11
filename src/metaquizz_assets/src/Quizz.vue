@@ -44,8 +44,7 @@
 <script>
 import { defineComponent, ref } from "vue";
 import { idlFactory } from "../../declarations/metaquizz/metaquizz.did.js";
-import { Actor } from "@dfinity/agent";
-import { canisterId } from "../../declarations/metaquizz/index.js";
+import { Actor, HttpAgent } from "@dfinity/agent";
 
 import Loader from "./UI/Loader.vue";
 
@@ -55,13 +54,25 @@ export default defineComponent({
     const quizz = ref(null);
     const questions = ref(null); //Used for v-for
     const studentAnswers = ref([]);
+    const usePlug = typeof window.ic.identityStoic == undefined;
+    console.log(usePlug);
 
-    const myGameActor = Actor.createActor(idlFactory, {
-      canisterId: canisterId,
-      agent: window.ic.plug.agent,
-    });
+    let myAgent;
+
+    //Create right agent
+    if (!usePlug) {
+      let identity = window.ic.identityStoic;
+      myAgent = new HttpAgent({ identity });
+    } else {
+      myAgent = window.ic.plug.agent;
+    }
 
     const getData = async () => {
+      //Create actor
+      let myGameActor = Actor.createActor(idlFactory, {
+        canisterId: "rrkah-fqaaa-aaaaa-aaaaq-cai",
+        agent: myAgent,
+      });
       let h = await myGameActor.sendAQuizz(BigInt(1));
       quizz.value = h[0];
       questions.value = h[0].questions;
@@ -81,8 +92,15 @@ export default defineComponent({
       }
       let tableauToSend = studentAnswers.value.map((x) => BigInt(x));
 
-      let id = await window.ic.plug.agent.getPrincipal();
-      let ourPlayer = { plug: id };
+      let ourPlayer;
+
+      if (usePlug) {
+        let id = await window.ic.plug.agent.getPrincipal();
+        ourPlayer = { plug: id };
+      } else {
+        let id = identity.value.getPrincipal();
+        ourPlayer = { stoic: id };
+      }
 
       let score = await myGameActor.checkResultQuizz(
         ourPlayer,

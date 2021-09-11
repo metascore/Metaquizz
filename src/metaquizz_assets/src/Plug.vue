@@ -101,13 +101,11 @@ export default {
         name: username.value,
       };
 
+      console.log(registration);
+
       myGameActor.addPlayer(registration).then((value) => console.log(value));
 
-      myGameActor
-        .getInfosOfPlayer(ourPlayer)
-        .then((value) => console.log(value));
-
-      router.push("/Quizz");
+      router.push("/quizz");
     };
     return { username, register };
   },

@@ -56,21 +56,14 @@ export default {
         } else {
           //No existing connection, lets make one!
           identity = await StoicIdentity.connect();
+
+          //To store the identity temporary
+          window.ic.identityStoic = identity;
         }
 
         //Lets display the connected principal!
         console.log(identity.getPrincipal().toText());
-
-        //Create an actor canister
-        const actor = Actor.createActor(idlFactory, {
-          agent: new HttpAgent({
-            identity,
-          }),
-          canisterId,
-        });
-
-        //Disconnect after
-        StoicIdentity.disconnect();
+        router.push("/stoic");
       });
     };
 
@@ -108,7 +101,7 @@ export default {
       console.log(`Plug's user principal Id is ${principalId}`);
 
       if (result) {
-        router.push("/Plug");
+        router.push("/plug");
       }
     };
 
