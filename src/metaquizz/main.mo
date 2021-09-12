@@ -99,7 +99,7 @@ shared ({ caller = owner }) actor class Metagame() : async Metascore.GameInterfa
         // When a new high score for a player happens, you should push that to Metascore.
         // This will ensure that your game is up-to-date in our canisters.
         // NOTE: Metascore does not implement this method yet
-        // await metascore.scoreUpdate([newScore]);
+        await metascore.scoreUpdate([newScore]);
     };
 
     public type PlayerRegister = {
